@@ -10,8 +10,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Djalal_Cyber">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/png" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -172,6 +172,42 @@ main{padding:8px 16px 110px}
 #toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:50;
   background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:800;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:86vw;text-align:center}
 #toast.show{opacity:1}
+/* Modern button refresh */
+button{ -webkit-tap-highlight-color:transparent; }
+.btn,.opt,.tok,.node,.x,.nav button{
+  transition:transform .16s ease, box-shadow .16s ease, background-color .16s ease,
+             border-color .16s ease, color .16s ease, opacity .16s ease;
+}
+.btn{
+  border:1px solid color-mix(in srgb,var(--accent) 78%,#fff 22%);
+  border-radius:16px;
+  background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 78%,#123D31));
+  box-shadow:0 4px 0 color-mix(in srgb,var(--accent) 68%,#000 32%),0 7px 16px rgba(0,0,0,.09);
+  letter-spacing:.1px;
+}
+.btn:hover:not(:disabled){filter:brightness(1.04);transform:translateY(-1px);box-shadow:0 5px 0 color-mix(in srgb,var(--accent) 68%,#000 32%),0 10px 20px rgba(0,0,0,.12)}
+.btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 color-mix(in srgb,var(--accent) 68%,#000 32%)}
+.btn.ghost{border:1px solid var(--line);border-radius:14px;box-shadow:0 3px 0 var(--line);}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent);background:var(--goodbg)}
+.btn.danger{border-radius:14px;box-shadow:0 3px 0 color-mix(in srgb,var(--bad) 24%,transparent)}
+.btn.danger:hover{background:var(--badbg)}
+.btn:disabled{border-color:transparent;opacity:.75}
+.opt{border-radius:16px;box-shadow:0 3px 0 var(--line);}
+.opt:hover:not([disabled]){border-color:var(--accent);transform:translateY(-1px)}
+.opt.sel,.opt.right{box-shadow:0 3px 0 var(--accent)}
+.opt.wrong{box-shadow:0 3px 0 var(--bad)}
+.tok{border-radius:14px;box-shadow:0 3px 0 var(--line)}
+.tok:active:not(.used){transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.x{border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;}
+.x:hover{color:var(--accent);border-color:var(--accent);background:var(--goodbg)}
+.nav{backdrop-filter:blur(14px);background:color-mix(in srgb,var(--surface) 92%,transparent);}
+.nav button{position:relative;margin:6px 5px 4px;padding:8px 0 7px;border-radius:14px;}
+.nav button:hover{background:var(--bg);color:var(--accent)}
+.nav button.on{background:var(--goodbg);}
+.nav button.on span{transform:translateY(-1px);}
+.node{transition:transform .16s ease,box-shadow .16s ease,filter .16s ease;}
+.node:hover{filter:brightness(1.04);}
+@media (hover:none){.btn:hover:not(:disabled),.opt:hover:not([disabled]){transform:none;}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -325,12 +361,137 @@ const LEVELS=[
 ]}
 ];
 
-const UPCOMING=[
- {id:4,title:'Python for Cybersecurity',color:'#4458C7',icon:'🐍'},
- {id:5,title:'Cybersecurity Fundamentals',color:'#7448C2',icon:'🛡️'},
- {id:6,title:'Web Security',color:'#9140AE',icon:'🕸️'},
- {id:7,title:'Ethical Hacking & Safe Labs',color:'#CC3F3F',icon:'🎯'}
-];
+LEVELS.push(
+{id:4,title:'Python for Cybersecurity',color:'#4458C7',icon:'🐍',lessons:[
+ {id:'4-1',title:'Python as a Security Tool',icon:'🐍',cards:[
+  ['🧰','Automate repetitive work','Python can read files, organize data, and repeat checks consistently. Use it to support analysis, not to attack systems.'],
+  ['📄','Reading a text file','`open("log.txt", "r", encoding="utf-8")` opens a text file for reading. A `with` block closes it safely when the work ends.'],
+  ['🔎','Search for patterns','A loop can inspect each line and check whether it contains a word such as `ERROR`. This is useful for reviewing your own application logs.']
+ ],q:[
+  mc('What is a sensible security use for Python?','Reviewing your own logs',['Guessing strangers’ passwords','Breaking into accounts','Hiding malware'],'Python is useful for authorized analysis and automation.'),
+  tf('A `with open(...)` block helps close a file safely.',true,'The file is closed when the block finishes.'),
+  fl('Use `open("log.txt", "___")` to read a file.','r',['w','a'],'The `r` mode means read.'),
+  mc('What does checking `"ERROR" in line` do?','Checks whether the text appears in the line',['Deletes the line','Encrypts the file','Connects to a server'],'The `in` operator checks for membership or a substring.')
+ ]},
+ {id:'4-2',title:'Analyzing Logs',icon:'📋',cards:[
+  ['🧾','What is a log?','A log is a record of events, such as sign-ins, application errors, or server requests. It helps explain what happened and when.'],
+  ['🕒','Look for patterns','Repeated failures, unexpected times, and sudden changes can be worth investigating. One event alone does not prove an attack.'],
+  ['🧹','Keep data private','Logs may contain usernames, IP addresses, or tokens. Work with authorized data and remove secrets before sharing examples.']
+ ],q:[
+  mc('What can a log help you understand?','Events that occurred in a system',['A user’s private thoughts','The future with certainty','A password without evidence'],'Logs record events and provide clues for investigation.'),
+  tf('One failed login always proves that an account was attacked.',false,'Mistakes happen; look for context and patterns.'),
+  fl('A log records system ___.','events',['feelings','predictions'],'Logs are records of events.'),
+  mc('Before sharing a log, what should you check?','Remove secrets and private information',['Publish all tokens','Add passwords','Ignore personal data'],'Logs can contain sensitive information.')
+ ]},
+ {id:'4-3',title:'Hashes and File Integrity',icon:'🔐',cards:[
+  ['#️⃣','What is a hash?','A cryptographic hash turns data into a fixed-length fingerprint. A tiny change in the file normally produces a different hash.'],
+  ['🧪','Compare fingerprints','If a trusted hash and a newly calculated hash match, that supports the conclusion that the file has not changed. The trusted value matters.'],
+  ['⚠️','Hash is not encryption','A hash is designed to be one-way; encryption is designed to be reversed with the right key. A hash alone does not hide a file for later recovery.']
+ ],q:[
+  mc('What is a file hash mainly used for?','Checking data integrity',['Recovering the original file from the hash','Replacing every password','Compressing video'],'Hashes help compare fingerprints of data.'),
+  tf('Hashing and encryption mean the same thing.',false,'Encryption is reversible with a key; hashing is designed to be one-way.'),
+  fl('A hash can act like a digital ___.','fingerprint',['folder','firewall'],'It is a compact fingerprint of data.'),
+  mc('A matching hash is most useful when compared with...','A trusted hash value',['A random number','A filename only','An unrelated file'],'The reference hash must itself be trustworthy.')
+ ]}
+]},
+{id:5,title:'Cybersecurity Fundamentals',color:'#7448C2',icon:'🛡️',lessons:[
+ {id:'5-1',title:'The CIA Triad',icon:'🛡️',cards:[
+  ['🔒','Confidentiality','Only authorized people should see sensitive information. Access controls and encryption can help protect confidentiality.'],
+  ['✅','Integrity','Information should remain accurate and should not be changed without permission. Checksums and controlled permissions can help.'],
+  ['🟢','Availability','Systems and data should be accessible when needed. Backups, monitoring, and resilient services support availability.']
+ ],q:[
+  mc('Which goal means keeping information secret from unauthorized people?','Confidentiality',['Integrity','Availability','Convenience'],'Confidentiality controls who can view information.'),
+  mc('Which goal focuses on preventing unauthorized changes?','Integrity',['Availability','Confidentiality','Decoration'],'Integrity means data remains accurate and trustworthy.'),
+  fl('Backups help support ___.','availability',['confidentiality','colour'],'Backups can help restore access after data loss.'),
+  tf('The CIA triad stands for confidentiality, integrity, and availability.',true,'These are three core security goals.')
+ ]},
+ {id:'5-2',title:'Threats, Vulnerabilities & Risk',icon:'⚠️',cards:[
+  ['👤','Threat','A threat is something that could cause harm, such as a criminal, a mistake, or a power outage.'],
+  ['🪟','Vulnerability','A vulnerability is a weakness, such as outdated software or a misconfigured permission, that could be exploited.'],
+  ['📊','Risk','Risk combines how likely a harmful event is with how serious its impact could be. Fix the most important risks first.']
+ ],q:[
+  mc('An outdated app with a known flaw is an example of a...','Vulnerability',['Backup','Security goal','Threat actor'],'The weakness in the app is the vulnerability.'),
+  mc('A power outage that could interrupt a service is a...','Threat',['Patch','Password manager','Hash'],'Threats can be malicious or accidental.'),
+  tf('Every vulnerability has exactly the same level of risk.',false,'Likelihood and impact differ.'),
+  fl('Risk considers likelihood and potential ___.','impact',['font','colour'],'Risk prioritization considers how likely and harmful an event could be.')
+ ]},
+ {id:'5-3',title:'Incident Response',icon:'🚨',cards:[
+  ['👀','Identify','Notice unusual activity and gather relevant facts without jumping to conclusions. Follow your organization’s reporting process.'],
+  ['🧯','Contain and recover','Authorized responders limit further harm, remove the cause, and restore systems from trusted sources when appropriate.'],
+  ['📝','Learn afterward','Record what happened, what worked, and what should change. Preserve evidence and avoid altering systems unnecessarily.']
+ ],q:[
+  mc('What should you do when you suspect a real security incident?','Report it through the approved process',['Delete all logs immediately','Post private evidence publicly','Guess and accuse someone'],'Follow the authorized incident-response process.'),
+  tf('Preserving relevant evidence can help an investigation.',true,'Logs and other evidence may help establish what happened.'),
+  mc('Why review an incident afterward?','To improve defenses and response',['To blame someone without evidence','To publish passwords','To skip future preparation'],'Lessons learned can reduce future risk.'),
+  fl('A response plan should include reporting, containment, and ___.','recovery',['rumours','password sharing'],'Recovery helps restore safe operation.')
+ ]}
+]},
+{id:6,title:'Web Security',color:'#9140AE',icon:'🕸️',lessons:[
+ {id:'6-1',title:'How Websites Handle Data',icon:'🧾',cards:[
+  ['🖥️','Browser and server','The browser sends a request and the server returns a response. The server must not assume that information sent by a browser is trustworthy.'],
+  ['🧹','Validate input','Check data on the server for the expected type, length, and format. Browser-side checks help users but can be bypassed.'],
+  ['🧱','Use safe database queries','Parameterized queries keep user input separate from SQL instructions, reducing the risk of SQL injection.']
+ ],q:[
+  mc('Where must important input validation happen?','On the server',['Only in the page design','Only in a screenshot','Nowhere'],'Client-side checks can be bypassed, so the server must validate too.'),
+  tf('Browser-side validation alone is a complete security boundary.',false,'Attackers can send requests without using your page.'),
+  mc('What helps prevent SQL injection?','Parameterized queries',['Joining input directly into SQL text','Trusting every input','Disabling backups'],'Parameters separate data from SQL commands.'),
+  fl('Treat user input as untrusted until it is ___.','validated',['published','coloured'],'Validate it against the rules for that field.')
+ ]},
+ {id:'6-2',title:'Login, Sessions & HTTPS',icon:'🔑',cards:[
+  ['🪪','Authentication','Authentication checks who a user is. Authorization decides what that user is allowed to do.'],
+  ['🎟️','Sessions','After login, a site may use a session cookie to remember the user. Session cookies should be protected and handled carefully.'],
+  ['🔒','HTTPS','HTTPS protects data in transit between the browser and website. It does not automatically make a dishonest or vulnerable website safe.']
+ ],q:[
+  mc('Authentication answers which question?','Who are you?',['What are you allowed to do?','How fast is the site?','Where is the database stored?'],'Authorization answers what you may do.'),
+  mc('What does HTTPS protect?','Data while it travels between browser and site',['Every file on the server from all threats','A user from every scam','A site from all coding bugs'],'HTTPS protects transport, not every part of a website.'),
+  tf('A site using HTTPS is guaranteed to be trustworthy.',false,'HTTPS is important, but malicious sites can also use it.'),
+  fl('Authorization determines what a user is allowed to ___.','do',['remember','encrypt'],'Authentication identifies; authorization grants permissions.')
+ ]},
+ {id:'6-3',title:'Common Web Risks',icon:'🕸️',cards:[
+  ['🧩','Cross-site scripting (XSS)','XSS happens when a site handles untrusted content unsafely and it runs as script in another user’s browser. Encode output and use safe APIs.'],
+  ['🗃️','SQL injection','SQL injection occurs when untrusted input is treated as part of a database command. Parameterized queries are a key defense.'],
+  ['🔐','Access control','Every sensitive action must check permissions on the server. Hiding a button in the interface is not access control.']
+ ],q:[
+  mc('What is a key defense against XSS?','Context-aware output encoding and safe APIs',['Trusting all user text','Removing the login page','Using a longer URL'],'Handle untrusted content safely before displaying it.'),
+  mc('Why is hiding an admin button not enough?','A request could still be sent directly to the server',['Buttons always contain viruses','It makes passwords shorter','It disables HTTPS'],'The server must enforce authorization for every sensitive action.'),
+  tf('A user changing an ID in a request should never gain access to another person’s data.',true,'The server must check the user’s permission for the requested object.'),
+  fl('Use parameterized queries to reduce SQL ___.','injection',['animation','compression'],'Parameterized queries separate data from instructions.')
+ ]}
+]},
+{id:7,title:'Ethical Hacking & Safe Labs',color:'#CC3F3F',icon:'🎯',lessons:[
+ {id:'7-1',title:'Permission and Scope',icon:'📜',cards:[
+  ['📝','Get written permission','Test only systems you own or have explicit authorization to assess. Good intentions do not replace permission.'],
+  ['🎯','Define scope','Scope states which systems, accounts, techniques, and dates are approved, and what must not be touched.'],
+  ['🛑','Stop when uncertain','If a target is outside scope or an unexpected risk appears, stop and ask the authorized owner before proceeding.']
+ ],q:[
+  mc('When is a security test appropriate?','When you have explicit authorization and follow the scope',['Whenever a site is public','When you are curious','When no one notices'],'Permission and scope are essential.'),
+  tf('A public website is automatically authorized for penetration testing.',false,'Public access is not permission to test it.'),
+  fl('The approved boundaries of a test are its ___.','scope',['score','theme'],'Scope defines what is included and excluded.'),
+  mc('What should you do if you discover the target is out of scope?','Stop and contact the authorized owner',['Continue quietly','Share the data online','Try a different account'],'Do not test beyond the permission you were given.')
+ ]},
+ {id:'7-2',title:'Build a Safe Practice Lab',icon:'🧪',cards:[
+  ['🏠','Use a local lab','Practice on intentionally vulnerable training apps or systems running locally, not on real people’s accounts or public targets.'],
+  ['🧱','Isolate the lab','Use test data, limit network exposure, and keep vulnerable practice systems separate from personal files and important accounts.'],
+  ['💾','Reset safely','Take snapshots or backups before exercises and restore the lab afterward. Never put real passwords or personal data into a training environment.']
+ ],q:[
+  mc('Where should a beginner practice security testing?','An authorized local lab or training environment',['A stranger’s account','A random public server','A school system without permission'],'A safe lab provides permission and limits unintended harm.'),
+  tf('An intentionally vulnerable lab should be exposed to the whole internet by default.',false,'Keep training systems isolated and limit access.'),
+  mc('What kind of data should you use in a practice lab?','Fake test data',['Real passwords','Other people’s private files','Live account tokens'],'Use test data to avoid exposing real information.'),
+  fl('A backup or snapshot helps you restore the lab to a known ___.','state',['password','website'],'Snapshots help reset the environment after practice.')
+ ]},
+ {id:'7-3',title:'Report Findings Responsibly',icon:'📝',cards:[
+  ['📌','Describe the issue','A useful finding states what was observed, the affected asset, the conditions, and the potential impact without exaggeration.'],
+  ['🧾','Keep evidence minimal','Record only the evidence needed to explain the issue. Avoid collecting or exposing personal data, secrets, or unrelated files.'],
+  ['🛠️','Recommend a fix','Give practical remediation steps and, when authorized, retest to confirm the problem is resolved. Share the report only with approved recipients.']
+ ],q:[
+  mc('What makes a security report useful?','Clear evidence, impact, and a practical fix',['Unsupported accusations','Publishing secrets','Only a dramatic title'],'A report should help the owner understand and resolve the issue.'),
+  tf('A responsible report should include unrelated private data to prove a point.',false,'Keep evidence minimal and protect privacy.'),
+  mc('Who should receive a confidential finding?','The authorized owner or approved reporting channel',['Everyone on social media','Random users','A public chat'],'Follow the agreed disclosure process.'),
+  fl('After a fix, an authorized tester can ___.','retest',['leak data','expand scope'],'Retesting checks whether the remediation worked.')
+ ]}
+]});
+
+const UPCOMING=[];
 
 const FLAT=LEVELS.flatMap(L=>L.lessons.map(l=>Object.assign({level:L},l)));
 
@@ -528,110 +689,695 @@ function viewLesson(){
        <div class="em">${c[0]}</div><h2>${esc(c[1])}</h2><p>${fmt(c[2])}</p>
        <div class="dots">${L.cards.map((_,i)=>`<i class="${i===P.ci?'on':''}"></i>`).join('')}</div>
      </div></div>
-     <div class="dock"><div><button class="btn" data-a="learnnext">${last?'Start quiz':'Next'}</button></div></div></div>`;
+     <div c<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Djalal_Cyber</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0D1816">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Djalal_Cyber">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F1F5F3;--surface:#FFFFFF;--ink:#12241F;--muted:#5E716B;--line:#D6E0DC;
+  --accent:#12805F;--on-accent:#FFFFFF;--gold:#E59E00;--bad:#C93C3C;--badbg:#FCE8E6;
+  --goodbg:#DDF3E8;--locked:#C9D5D1;--code:#E6EEEB;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1816;--surface:#162623;--ink:#E6F1EE;--muted:#93A8A2;--line:#26403B;
+    --accent:#2FC795;--on-accent:#06231A;--gold:#FFC83D;--bad:#FF7A70;--badbg:#3A1E1D;
+    --goodbg:#143A2E;--locked:#2B3F3B;--code:#22352F;
   }
-  if(P.phase==='done'){
-    const r=P.result;
-    return `<div class="lesson"><div class="lbody"><div class="done">
-      <div class="big">${r.stars===3?'🏆':r.stars===2?'🎉':'👍'}</div>
-      <h2>Lesson complete</h2><p class="sub">${esc(L.title)}</p>
-      <div class="rs"><div><b>+${r.xp}</b><span>XP</span></div><div><b>${r.acc}%</b><span>First-try accuracy</span></div><div><b>${'★'.repeat(r.stars)}${'☆'.repeat(3-r.stars)}</b><span>Stars</span></div></div>
-      ${r.got.length?`<div class="newb"><h3>New badges</h3>${r.got.map(b=>`<div class="nb"><span class="bi" style="display:inline">${b.i}</span><div><b>${esc(b.n)}</b><span>${esc(b.d)}</span></div></div>`).join('')}</div>`:''}
-     </div></div>
-     <div class="dock"><div><button class="btn" data-a="close">Continue</button></div></div></div>`;
+}
+:root[data-theme="dark"]{
+  --bg:#0D1816;--surface:#162623;--ink:#E6F1EE;--muted:#93A8A2;--line:#26403B;
+  --accent:#2FC795;--on-accent:#06231A;--gold:#FFC83D;--bad:#FF7A70;--badbg:#3A1E1D;
+  --goodbg:#143A2E;--locked:#2B3F3B;--code:#22352F;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Nunito",ui-rounded,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-weight:700;font-size:16px;line-height:1.45}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em;background:var(--code);padding:1px 6px;border-radius:6px}
+h1,h2,h3,p{margin:0}
+#app{max-width:520px;margin:0 auto}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;background:var(--bg);border-bottom:2px solid var(--line)}
+.brand{font-weight:900;font-size:20px;letter-spacing:-.3px;display:flex;align-items:center;gap:8px}
+.brand i{font-style:normal;font-family:ui-monospace,Menlo,monospace;background:var(--ink);color:var(--bg);border-radius:8px;padding:2px 8px;font-size:15px}
+.stats{display:flex;gap:8px}
+.chip{background:var(--surface);border:2px solid var(--line);border-radius:999px;padding:4px 12px;font-weight:900;font-size:15px}
+
+main{padding:8px 16px 110px}
+
+/* path */
+.level{margin-top:22px}
+.banner{background:var(--c);color:#fff;border-radius:18px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 5px 0 rgba(0,0,0,.25)}
+.banner .lv{font-size:13px;font-weight:800;opacity:.9}
+.banner h2{font-size:19px;font-weight:900;line-height:1.2}
+.banner .count{background:rgba(255,255,255,.22);border-radius:12px;padding:6px 10px;font-weight:900;white-space:nowrap}
+.banner.soon{background:var(--locked);color:var(--muted);box-shadow:0 5px 0 rgba(0,0,0,.12)}
+.banner.soon .count{background:rgba(0,0,0,.08)}
+.path{display:flex;flex-direction:column;align-items:center;padding:18px 0 4px}
+.nodewrap{display:flex;flex-direction:column;align-items:center;margin:10px 0 14px;position:relative}
+.node{width:72px;height:72px;border-radius:50%;font-size:30px;display:grid;place-items:center;
+  box-shadow:0 6px 0 rgba(0,0,0,.28);transition:transform .08s,box-shadow .08s}
+.node:active{transform:translateY(5px);box-shadow:0 1px 0 rgba(0,0,0,.28)}
+.node.done{background:var(--c);color:#fff;font-weight:900}
+.node.cur{background:var(--surface);border:5px solid var(--c);animation:pulse 2.2s ease-out infinite}
+.node.lock{background:var(--locked);color:var(--muted);font-size:24px}
+.nlabel{margin-top:10px;font-size:14px;font-weight:800;color:var(--muted);text-align:center;max-width:150px;line-height:1.25}
+.tip{position:absolute;top:-30px;background:var(--surface);border:2px solid var(--c);color:var(--c);border-radius:10px;padding:1px 12px;font-weight:900;font-size:13px}
+.tip::after{content:"";position:absolute;left:50%;bottom:-7px;width:10px;height:10px;background:var(--surface);border-right:2px solid var(--c);border-bottom:2px solid var(--c);transform:translateX(-50%) rotate(45deg)}
+@keyframes pulse{0%{box-shadow:0 6px 0 rgba(0,0,0,.28),0 0 0 0 color-mix(in srgb,var(--c) 55%,transparent)}
+  80%,100%{box-shadow:0 6px 0 rgba(0,0,0,.28),0 0 0 16px transparent}}
+.soonnote{text-align:center;color:var(--muted);padding:14px 0 0;font-size:14px}
+
+/* bottom nav */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:2px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+.nav div{max-width:520px;margin:0 auto;display:flex}
+.nav button{flex:1;padding:9px 0 8px;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:12px;font-weight:800;color:var(--muted)}
+.nav button span{font-size:22px;filter:grayscale(1);opacity:.7}
+.nav button.on{color:var(--accent)}
+.nav button.on span{filter:none;opacity:1}
+
+/* cards / generic */
+.card{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:16px}
+.pagehead{font-size:26px;font-weight:900;margin:18px 0 12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:14px}
+.stat b{display:block;font-size:26px;font-weight:900}
+.stat span{color:var(--muted);font-size:14px}
+.badges{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.badge{background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:14px;text-align:center}
+.badge .bi{font-size:38px;display:block;margin-bottom:4px}
+.badge b{display:block;font-size:15px;font-weight:900}
+.badge span{display:block;color:var(--muted);font-size:13px;font-weight:700;line-height:1.3;margin-top:2px}
+.badge.off .bi{filter:grayscale(1);opacity:.35}
+.badge.off{background:transparent;border-style:dashed}
+.row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+
+/* buttons */
+.btn{background:var(--accent);color:var(--on-accent);border-radius:14px;padding:13px 20px;font-weight:900;font-size:16px;box-shadow:0 4px 0 rgba(0,0,0,.28);width:100%}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.28)}
+.btn:disabled{background:var(--locked);color:var(--muted);box-shadow:none;cursor:not-allowed}
+.btn.ghost{background:var(--surface);color:var(--ink);border:2px solid var(--line);box-shadow:0 4px 0 var(--line);width:auto;padding:10px 16px}
+.btn.danger{background:var(--surface);color:var(--bad);border:2px solid var(--bad);box-shadow:none;width:auto;padding:10px 16px}
+
+/* lesson overlay */
+.lesson{position:fixed;inset:0;z-index:30;background:var(--bg);display:flex;flex-direction:column;
+  padding-top:env(safe-area-inset-top,0px)}
+.lhead{display:flex;align-items:center;gap:12px;padding:12px 16px;max-width:520px;width:100%;margin:0 auto}
+.x{font-size:22px;color:var(--muted);width:36px;height:36px;border-radius:10px}
+.bar{flex:1;height:14px;background:var(--line);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .3s}
+.lbody{flex:1;overflow:auto;padding:12px 16px 24px;max-width:520px;width:100%;margin:0 auto}
+.dock{padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));border-top:2px solid var(--line);background:var(--bg)}
+.dock>div{max-width:520px;margin:0 auto}
+.dock.good{background:var(--goodbg);border-color:transparent}
+.dock.bad{background:var(--badbg);border-color:transparent}
+.dock.bad .btn{background:var(--bad);color:#fff}
+.fb{margin-bottom:12px}
+.fb b{font-size:19px;font-weight:900;display:block}
+.dock.good .fb b{color:var(--accent)}
+.dock.bad .fb b{color:var(--bad)}
+.fb p{font-weight:700;font-size:15px;margin-top:2px}
+
+.learn{text-align:center;padding-top:24px}
+.learn .em{font-size:72px;line-height:1}
+.learn h2{font-size:26px;font-weight:900;margin:16px 0 10px}
+.learn p{font-size:18px;color:var(--ink);max-width:420px;margin:0 auto;line-height:1.55}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:26px}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--accent)}
+.tag{display:inline-block;background:var(--code);border-radius:999px;padding:3px 12px;font-size:13px;font-weight:800;color:var(--muted);margin-bottom:6px}
+
+.qtext{font-size:23px;font-weight:900;line-height:1.3;margin:10px 0 20px}
+.blank{display:inline-block;min-width:80px;border-bottom:3px solid var(--accent);text-align:center;color:var(--accent);padding:0 6px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{width:100%;text-align:left;background:var(--surface);border:2px solid var(--line);box-shadow:0 4px 0 var(--line);
+  border-radius:14px;padding:14px 16px;font-weight:800;font-size:17px}
+.opt:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.opt.sel{border-color:var(--accent);background:var(--goodbg);box-shadow:0 4px 0 var(--accent)}
+.opt.right{border-color:var(--accent);background:var(--goodbg);box-shadow:0 4px 0 var(--accent)}
+.opt.wrong{border-color:var(--bad);background:var(--badbg);box-shadow:0 4px 0 var(--bad)}
+.opt[disabled]{cursor:default}
+.ans{min-height:64px;border-top:2px solid var(--line);border-bottom:2px solid var(--line);padding:10px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:22px}
+.pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.tok{background:var(--surface);border:2px solid var(--line);box-shadow:0 3px 0 var(--line);border-radius:12px;padding:9px 14px;font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:800;font-size:16px}
+.tok.used{background:var(--code);color:transparent;box-shadow:none;border-style:dashed}
+
+/* done */
+.done{text-align:center;padding-top:30px}
+.done .big{font-size:84px;line-height:1}
+.done h2{font-size:28px;font-weight:900;margin:14px 0 4px}
+.done .sub{color:var(--muted)}
+.rs{display:flex;gap:10px;margin:24px 0 8px}
+.rs div{flex:1;border:2px solid var(--line);border-radius:14px;background:var(--surface);padding:10px 4px}
+.rs b{display:block;font-size:22px;font-weight:900}
+.rs span{font-size:13px;color:var(--muted)}
+.newb{margin-top:16px;text-align:left}
+.newb h3{font-size:16px;margin-bottom:8px}
+.nb{display:flex;align-items:center;gap:10px;background:var(--surface);border:2px solid var(--gold);border-radius:14px;padding:8px 12px;margin-bottom:8px}
+.nb .bi{font-size:28px}
+.nb span{display:block;font-size:13px;color:var(--muted)}
+
+#toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:50;
+  background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:800;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:86vw;text-align:center}
+#toast.show{opacity:1}
+/* Modern button refresh */
+button{ -webkit-tap-highlight-color:transparent; }
+.btn,.opt,.tok,.node,.x,.nav button{
+  transition:transform .16s ease, box-shadow .16s ease, background-color .16s ease,
+             border-color .16s ease, color .16s ease, opacity .16s ease;
+}
+.btn{
+  border:1px solid color-mix(in srgb,var(--accent) 78%,#fff 22%);
+  border-radius:16px;
+  background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 78%,#123D31));
+  box-shadow:0 4px 0 color-mix(in srgb,var(--accent) 68%,#000 32%),0 7px 16px rgba(0,0,0,.09);
+  letter-spacing:.1px;
+}
+.btn:hover:not(:disabled){filter:brightness(1.04);transform:translateY(-1px);box-shadow:0 5px 0 color-mix(in srgb,var(--accent) 68%,#000 32%),0 10px 20px rgba(0,0,0,.12)}
+.btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 color-mix(in srgb,var(--accent) 68%,#000 32%)}
+.btn.ghost{border:1px solid var(--line);border-radius:14px;box-shadow:0 3px 0 var(--line);}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent);background:var(--goodbg)}
+.btn.danger{border-radius:14px;box-shadow:0 3px 0 color-mix(in srgb,var(--bad) 24%,transparent)}
+.btn.danger:hover{background:var(--badbg)}
+.btn:disabled{border-color:transparent;opacity:.75}
+.opt{border-radius:16px;box-shadow:0 3px 0 var(--line);}
+.opt:hover:not([disabled]){border-color:var(--accent);transform:translateY(-1px)}
+.opt.sel,.opt.right{box-shadow:0 3px 0 var(--accent)}
+.opt.wrong{box-shadow:0 3px 0 var(--bad)}
+.tok{border-radius:14px;box-shadow:0 3px 0 var(--line)}
+.tok:active:not(.used){transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.x{border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;}
+.x:hover{color:var(--accent);border-color:var(--accent);background:var(--goodbg)}
+.nav{backdrop-filter:blur(14px);background:color-mix(in srgb,var(--surface) 92%,transparent);}
+.nav button{position:relative;margin:6px 5px 4px;padding:8px 0 7px;border-radius:14px;}
+.nav button:hover{background:var(--bg);color:var(--accent)}
+.nav button.on{background:var(--goodbg);}
+.nav button.on span{transform:translateY(-1px);}
+.node{transition:transform .16s ease,box-shadow .16s ease,filter .16s ease;}
+.node:hover{filter:brightness(1.04);}
+@media (hover:none){.btn:hover:not(:disabled),.opt:hover:not([disabled]){transform:none;}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- helpers ---------- */
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=s=>esc(s).replace(/`([^`]+)`/g,'<code>$1</code>');
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const today=()=>ymd(new Date());
+const yesterday=()=>{const d=new Date();d.setDate(d.getDate()-1);return ymd(d)};
+
+/* question builders */
+const mc=(q,c,w,e)=>({t:'mcq',q,c,w,e});
+const fl=(q,c,w,e)=>({t:'fill',q,c,w,e});
+const tf=(q,b,e)=>({t:'tf',q,b,e});
+const od=(q,valid,extra,e)=>({t:'order',q,valid,extra:extra||[],e});
+
+/* ---------- course content ---------- */
+const LEVELS=[
+{id:1,title:'Computer & Internet Basics',color:'#2E8F4A',icon:'💻',lessons:[
+ {id:'1-1',title:'Inside a Computer',icon:'🖥️',
+  cards:[
+   ['🧠','The brain: CPU','The CPU (processor) runs instructions. Every tap, click and app is millions of tiny instructions per second.'],
+   ['⚡','Memory vs. storage','RAM is fast, temporary memory for what you are using right now. It is wiped when power goes off. Storage (SSD or HDD) keeps your files permanently.'],
+   ['🧩','The operating system','The OS (Windows, macOS, Linux, Android) manages the hardware and runs your apps. It also decides who is allowed to open which files, so security starts here.']
+  ],
+  q:[
+   mc('Which part runs program instructions?','CPU',['Monitor','SSD','Router'],'The CPU executes instructions. Everything else supports it.'),
+   tf('RAM keeps your files after you shut the computer down.',false,'RAM is temporary. Files that must last are kept in storage (SSD or HDD).'),
+   fl('Your photos are saved permanently on ___.','storage',['RAM','the CPU'],'Storage keeps data even with the power off.'),
+   mc('Which of these is an operating system?','Linux',['Chrome','Python','Wi-Fi'],'Linux is an OS. Chrome is a browser and Python is a programming language.'),
+   mc('What does the operating system do?','Manages hardware and runs apps',['Only blocks viruses','Stores websites','Makes the internet faster'],'The OS sits between your apps and the hardware and controls access to both.')
+  ]},
+ {id:'1-2',title:'How the Internet Works',icon:'🌐',
+  cards:[
+   ['📡','Clients and servers','Your phone or laptop is a client: it asks for things. A server is a computer that answers by sending web pages, videos and messages.'],
+   ['📖','Names to numbers','Every device has an IP address. People prefer names like `example.com`, so DNS translates names into IP addresses, like a phone book.'],
+   ['🔒','HTTP and HTTPS','Browsers and servers talk using HTTP. HTTPS is the same conversation but encrypted, so people on the network cannot read or change it. Look for the padlock.']
+  ],
+  q:[
+   mc('What does DNS do?','Translates domain names into IP addresses',['Encrypts your passwords','Blocks ads','Speeds up Wi-Fi'],'DNS is the internet\'s phone book: name in, IP address out.'),
+   fl('A computer that answers requests is called a ___.','server',['client','browser'],'Servers answer. Clients ask.'),
+   tf('HTTPS encrypts the traffic between your browser and a website.',true,'That encryption is what the padlock stands for.'),
+   mc('You open a website. Which one is the client?','Your phone\'s browser',['The web server','The domain name','The padlock icon'],'The client is the side that makes the request: your device.'),
+   mc('What is an IP address?','A number that identifies a device on a network',['A Wi-Fi password','A type of virus','A website\'s colour'],'IP addresses let data find the right device.')
+  ]},
+ {id:'1-3',title:'Safe Habits Online',icon:'🔐',
+  cards:[
+   ['🗝️','Strong passwords','Long beats clever. A passphrase of four or more random words is hard to guess and easy to remember. Never reuse a password, and use a password manager.'],
+   ['📲','Two-factor authentication','2FA adds a second proof, like a code from an app. Even if your password leaks, attackers are still locked out.'],
+   ['🎣','Spotting phishing','Phishing messages pretend to be your bank, boss or a delivery company and rush you to click. Check the sender, look at the link before tapping, and never share codes.']
+  ],
+  q:[
+   mc('Which password is the strongest?','maple-orbit-tractor-violin',['Password123!','ilovemycat','12345678'],'Length and randomness win. Common patterns get cracked first.'),
+   tf('Reusing one strong password on every site is fine.',false,'If one site leaks it, attackers try it everywhere else.'),
+   fl('2FA means a password plus a second ___.','factor',['folder','firewall'],'Two-factor: something you know plus something you have.'),
+   mc('A text says your account is locked and to tap a link now. What is the best move?','Open the official app or site yourself',['Tap the link quickly','Reply with your password','Forward it to friends'],'Never trust the link in the message. Go to the real site on your own.'),
+   mc('Which is a common sign of phishing?','Pressure to act right now',['A receipt for something you bought','A calendar reminder you set','A message you were expecting'],'Urgency is a classic trick to stop you from thinking.')
+  ]}
+]},
+{id:2,title:'Networking Fundamentals',color:'#1F8A78',icon:'🌐',lessons:[
+ {id:'2-1',title:'IP Addresses & Ports',icon:'🔢',
+  cards:[
+   ['🏷️','IPv4 addresses','Four numbers from 0 to 255 separated by dots, like `192.168.1.10`. Ranges such as `192.168.x.x` and `10.x.x.x` are private: used inside homes and offices.'],
+   ['🏠','Localhost','`127.0.0.1` always means "this very computer". Developers use it to test things safely without touching the network.'],
+   ['🚪','Ports','If an IP address is a building, ports are its numbered doors. Each service listens on one: `80` for HTTP, `443` for HTTPS, `22` for SSH.']
+  ],
+  q:[
+   mc('Which is a valid IPv4 address?','192.168.1.10',['192.168.1.300','192.168.1','192.168.1.10.5'],'Each of the four numbers must be 0 to 255, and there must be exactly four.'),
+   mc('What does `127.0.0.1` refer to?','Your own computer',['Google\'s server','Your router','Nowhere'],'It is the loopback address: traffic never leaves your machine.'),
+   fl('Port 443 is normally used for ___.','HTTPS',['SSH','DNS'],'443 is secure web traffic. SSH uses 22.'),
+   tf('`192.168.x.x` is a private address range.',true,'Private ranges are not routed on the public internet.'),
+   mc('In the building analogy, a port is like...','A numbered door into the building',['The street','The roof','The postman'],'The IP finds the building, the port picks the door.')
+  ]},
+ {id:'2-2',title:'Devices & Your Network',icon:'📡',
+  cards:[
+   ['🔀','Router and switch','A router connects your network to other networks, like the internet. A switch connects devices inside one network.'],
+   ['🎟️','DHCP','When your phone joins Wi-Fi, DHCP hands it an IP address automatically so you do not set it by hand.'],
+   ['🧱','Firewall','A firewall filters traffic using rules: allow this, block that. It is a guard at the door deciding who gets in.']
+  ],
+  q:[
+   mc('Which device connects your home network to the internet?','Router',['Printer','Monitor','USB drive'],'The router is the gateway between your network and the outside.'),
+   fl('___ automatically gives devices an IP address.','DHCP',['DNS','HTTPS'],'DHCP assigns addresses. DNS translates names.'),
+   tf('A firewall filters network traffic using rules.',true,'Rules say which traffic is allowed or blocked.'),
+   mc('What does a switch do?','Connects devices inside one network',['Translates names to IPs','Encrypts email','Stores passwords'],'Switches link local devices. Routers link networks.'),
+   mc('Your new phone joins Wi-Fi and works with no setup. What gave it an address?','DHCP',['A firewall','HTTPS','SSH'],'DHCP handles it silently in the background.')
+  ]},
+ {id:'2-3',title:'TCP, UDP & Protocols',icon:'📨',
+  cards:[
+   ['📜','What is a protocol?','A protocol is an agreed set of rules for communicating, like a shared language. Two devices must speak the same protocol to understand each other.'],
+   ['⚖️','TCP vs. UDP','TCP is careful: it checks every piece arrives, in order (web pages, email). UDP is fast and relaxed: it does not resend lost pieces (video calls, games).'],
+   ['🧰','Protocols to know','`HTTP/HTTPS` for the web, `SSH` for secure remote login, `FTP` for file transfer (not encrypted), `DNS` for names. Prefer the encrypted versions.']
+  ],
+  q:[
+   mc('Which protocol guarantees delivery in order?','TCP',['UDP','Ping','Bluetooth'],'TCP confirms delivery and resends anything that went missing.'),
+   mc('Live video calls often use which protocol, because speed matters more than perfection?','UDP',['TCP','FTP','SSH'],'A late frame is useless, so UDP skips resending it.'),
+   fl('___ is used to log in securely to a remote computer.','SSH',['FTP','HTTP'],'SSH encrypts the whole session.'),
+   tf('Plain FTP encrypts your files while sending them.',false,'Plain FTP sends everything, even passwords, in the clear.'),
+   mc('Which is safer for browsing?','HTTPS',['HTTP','They are identical','FTP'],'HTTPS encrypts the connection, HTTP does not.')
+  ]}
+]},
+{id:3,title:'Linux & Command Line',color:'#2F6FC4',icon:'🐧',lessons:[
+ {id:'3-1',title:'Finding Your Way',icon:'🧭',
+  cards:[
+   ['⌨️','The terminal','The command line lets you control a computer by typing commands. It is fast, scriptable, and used everywhere in security work.'],
+   ['📍','Where am I?','`pwd` prints your current directory. `ls` lists what is inside. `ls -l` shows details and `ls -a` shows hidden files.'],
+   ['🚶','Moving around','`cd folder` enters a folder, `cd ..` goes up one level, `cd ~` goes home. A path starting with `/` begins at the root of the system.']
+  ],
+  q:[
+   mc('Which command shows your current directory?','pwd',['ls','cd','cat'],'pwd stands for "print working directory".'),
+   fl('Use ___ to list the files in a folder.','ls',['cd','pwd'],'ls lists. cd changes directory.'),
+   mc('What does `cd ..` do?','Moves up one folder',['Deletes the folder','Lists hidden files','Goes to the root'],'Two dots always mean the parent folder.'),
+   tf('Files whose names start with a dot are hidden, and `ls -a` shows them.',true,'Config files are often hidden dotfiles, like `.bashrc`.'),
+   od('List all files, including hidden ones, in long format.',[['ls','-l','-a'],['ls','-a','-l']],['cd'],'`ls -l -a` (or `ls -la`) combines both options.')
+  ]},
+ {id:'3-2',title:'Working with Files',icon:'📁',
+  cards:[
+   ['🆕','Create','`mkdir notes` makes a folder. `touch a.txt` creates an empty file.'],
+   ['👀','Read','`cat a.txt` prints a file to the screen. `echo hi > a.txt` writes text into it.'],
+   ['🗑️','Copy, move, delete','`cp a b` copies, `mv a b` moves or renames, and `rm a` deletes. There is no recycle bin, so double-check before you press Enter.']
+  ],
+  q:[
+   mc('Which command makes a new folder?','mkdir',['touch','cat','rm'],'mkdir means "make directory". touch makes an empty file.'),
+   mc('Which command prints the contents of a file?','cat',['mkdir','mv','cp'],'cat shows file contents in the terminal.'),
+   fl('`mv old.txt new.txt` ___ the file.','renames',['deletes','encrypts'],'mv moves a file, and moving within a folder is a rename.'),
+   tf('`rm` sends files to a recycle bin you can restore from.',false,'rm deletes permanently. Be careful.'),
+   od('Copy report.txt to backup.txt.',[['cp','report.txt','backup.txt']],['mv'],'cp takes the source first, then the destination.')
+  ]},
+ {id:'3-3',title:'Users & Permissions',icon:'🔑',
+  cards:[
+   ['🙋','Who are you?','`whoami` prints your username. Linux has regular users and one all-powerful user called `root`.'],
+   ['🛡️','sudo','`sudo command` runs one command as root. Use it only when needed and when you understand the command. Power cuts both ways.'],
+   ['🔍','Reading rwx','`ls -l` shows permissions like `-rwxr-xr--`. r is read, w is write, x is execute, in three groups: owner, group, others. `chmod +x file` makes a file executable.']
+  ],
+  q:[
+   mc('Which command shows your username?','whoami',['pwd','sudo','chmod'],'whoami answers "who am I logged in as?".'),
+   mc('What is root?','The all-powerful admin account',['A folder','A virus','A network port'],'Root can do anything on the system, which is why it must be used carefully.'),
+   fl('In permissions, the letter ___ means execute.','x',['r','w'],'r read, w write, x execute.'),
+   mc('In `-rw-r--r--`, who can write to the file?','Only the owner',['Everyone','Only the group','Nobody'],'The first rw- belongs to the owner. Others only have r.'),
+   tf('It is fine to run `sudo` on a command you do not understand if it looks official.',false,'Never run commands with root power unless you know what they do.'),
+   od('Make script.sh executable.',[['chmod','+x','script.sh']],['sudo'],'chmod changes permissions, and +x adds execute.')
+  ]}
+]}
+];
+
+LEVELS.push(
+{id:4,title:'Python for Cybersecurity',color:'#4458C7',icon:'🐍',lessons:[
+ {id:'4-1',title:'Python as a Security Tool',icon:'🐍',cards:[
+  ['🧰','Automate repetitive work','Python can read files, organize data, and repeat checks consistently. Use it to support analysis, not to attack systems.'],
+  ['📄','Reading a text file','`open("log.txt", "r", encoding="utf-8")` opens a text file for reading. A `with` block closes it safely when the work ends.'],
+  ['🔎','Search for patterns','A loop can inspect each line and check whether it contains a word such as `ERROR`. This is useful for reviewing your own application logs.']
+ ],q:[
+  mc('What is a sensible security use for Python?','Reviewing your own logs',['Guessing strangers’ passwords','Breaking into accounts','Hiding malware'],'Python is useful for authorized analysis and automation.'),
+  tf('A `with open(...)` block helps close a file safely.',true,'The file is closed when the block finishes.'),
+  fl('Use `open("log.txt", "___")` to read a file.','r',['w','a'],'The `r` mode means read.'),
+  mc('What does checking `"ERROR" in line` do?','Checks whether the text appears in the line',['Deletes the line','Encrypts the file','Connects to a server'],'The `in` operator checks for membership or a substring.')
+ ]},
+ {id:'4-2',title:'Analyzing Logs',icon:'📋',cards:[
+  ['🧾','What is a log?','A log is a record of events, such as sign-ins, application errors, or server requests. It helps explain what happened and when.'],
+  ['🕒','Look for patterns','Repeated failures, unexpected times, and sudden changes can be worth investigating. One event alone does not prove an attack.'],
+  ['🧹','Keep data private','Logs may contain usernames, IP addresses, or tokens. Work with authorized data and remove secrets before sharing examples.']
+ ],q:[
+  mc('What can a log help you understand?','Events that occurred in a system',['A user’s private thoughts','The future with certainty','A password without evidence'],'Logs record events and provide clues for investigation.'),
+  tf('One failed login always proves that an account was attacked.',false,'Mistakes happen; look for context and patterns.'),
+  fl('A log records system ___.','events',['feelings','predictions'],'Logs are records of events.'),
+  mc('Before sharing a log, what should you check?','Remove secrets and private information',['Publish all tokens','Add passwords','Ignore personal data'],'Logs can contain sensitive information.')
+ ]},
+ {id:'4-3',title:'Hashes and File Integrity',icon:'🔐',cards:[
+  ['#️⃣','What is a hash?','A cryptographic hash turns data into a fixed-length fingerprint. A tiny change in the file normally produces a different hash.'],
+  ['🧪','Compare fingerprints','If a trusted hash and a newly calculated hash match, that supports the conclusion that the file has not changed. The trusted value matters.'],
+  ['⚠️','Hash is not encryption','A hash is designed to be one-way; encryption is designed to be reversed with the right key. A hash alone does not hide a file for later recovery.']
+ ],q:[
+  mc('What is a file hash mainly used for?','Checking data integrity',['Recovering the original file from the hash','Replacing every password','Compressing video'],'Hashes help compare fingerprints of data.'),
+  tf('Hashing and encryption mean the same thing.',false,'Encryption is reversible with a key; hashing is designed to be one-way.'),
+  fl('A hash can act like a digital ___.','fingerprint',['folder','firewall'],'It is a compact fingerprint of data.'),
+  mc('A matching hash is most useful when compared with...','A trusted hash value',['A random number','A filename only','An unrelated file'],'The reference hash must itself be trustworthy.')
+ ]}
+]},
+{id:5,title:'Cybersecurity Fundamentals',color:'#7448C2',icon:'🛡️',lessons:[
+ {id:'5-1',title:'The CIA Triad',icon:'🛡️',cards:[
+  ['🔒','Confidentiality','Only authorized people should see sensitive information. Access controls and encryption can help protect confidentiality.'],
+  ['✅','Integrity','Information should remain accurate and should not be changed without permission. Checksums and controlled permissions can help.'],
+  ['🟢','Availability','Systems and data should be accessible when needed. Backups, monitoring, and resilient services support availability.']
+ ],q:[
+  mc('Which goal means keeping information secret from unauthorized people?','Confidentiality',['Integrity','Availability','Convenience'],'Confidentiality controls who can view information.'),
+  mc('Which goal focuses on preventing unauthorized changes?','Integrity',['Availability','Confidentiality','Decoration'],'Integrity means data remains accurate and trustworthy.'),
+  fl('Backups help support ___.','availability',['confidentiality','colour'],'Backups can help restore access after data loss.'),
+  tf('The CIA triad stands for confidentiality, integrity, and availability.',true,'These are three core security goals.')
+ ]},
+ {id:'5-2',title:'Threats, Vulnerabilities & Risk',icon:'⚠️',cards:[
+  ['👤','Threat','A threat is something that could cause harm, such as a criminal, a mistake, or a power outage.'],
+  ['🪟','Vulnerability','A vulnerability is a weakness, such as outdated software or a misconfigured permission, that could be exploited.'],
+  ['📊','Risk','Risk combines how likely a harmful event is with how serious its impact could be. Fix the most important risks first.']
+ ],q:[
+  mc('An outdated app with a known flaw is an example of a...','Vulnerability',['Backup','Security goal','Threat actor'],'The weakness in the app is the vulnerability.'),
+  mc('A power outage that could interrupt a service is a...','Threat',['Patch','Password manager','Hash'],'Threats can be malicious or accidental.'),
+  tf('Every vulnerability has exactly the same level of risk.',false,'Likelihood and impact differ.'),
+  fl('Risk considers likelihood and potential ___.','impact',['font','colour'],'Risk prioritization considers how likely and harmful an event could be.')
+ ]},
+ {id:'5-3',title:'Incident Response',icon:'🚨',cards:[
+  ['👀','Identify','Notice unusual activity and gather relevant facts without jumping to conclusions. Follow your organization’s reporting process.'],
+  ['🧯','Contain and recover','Authorized responders limit further harm, remove the cause, and restore systems from trusted sources when appropriate.'],
+  ['📝','Learn afterward','Record what happened, what worked, and what should change. Preserve evidence and avoid altering systems unnecessarily.']
+ ],q:[
+  mc('What should you do when you suspect a real security incident?','Report it through the approved process',['Delete all logs immediately','Post private evidence publicly','Guess and accuse someone'],'Follow the authorized incident-response process.'),
+  tf('Preserving relevant evidence can help an investigation.',true,'Logs and other evidence may help establish what happened.'),
+  mc('Why review an incident afterward?','To improve defenses and response',['To blame someone without evidence','To publish passwords','To skip future preparation'],'Lessons learned can reduce future risk.'),
+  fl('A response plan should include reporting, containment, and ___.','recovery',['rumours','password sharing'],'Recovery helps restore safe operation.')
+ ]}
+]},
+{id:6,title:'Web Security',color:'#9140AE',icon:'🕸️',lessons:[
+ {id:'6-1',title:'How Websites Handle Data',icon:'🧾',cards:[
+  ['🖥️','Browser and server','The browser sends a request and the server returns a response. The server must not assume that information sent by a browser is trustworthy.'],
+  ['🧹','Validate input','Check data on the server for the expected type, length, and format. Browser-side checks help users but can be bypassed.'],
+  ['🧱','Use safe database queries','Parameterized queries keep user input separate from SQL instructions, reducing the risk of SQL injection.']
+ ],q:[
+  mc('Where must important input validation happen?','On the server',['Only in the page design','Only in a screenshot','Nowhere'],'Client-side checks can be bypassed, so the server must validate too.'),
+  tf('Browser-side validation alone is a complete security boundary.',false,'Attackers can send requests without using your page.'),
+  mc('What helps prevent SQL injection?','Parameterized queries',['Joining input directly into SQL text','Trusting every input','Disabling backups'],'Parameters separate data from SQL commands.'),
+  fl('Treat user input as untrusted until it is ___.','validated',['published','coloured'],'Validate it against the rules for that field.')
+ ]},
+ {id:'6-2',title:'Login, Sessions & HTTPS',icon:'🔑',cards:[
+  ['🪪','Authentication','Authentication checks who a user is. Authorization decides what that user is allowed to do.'],
+  ['🎟️','Sessions','After login, a site may use a session cookie to remember the user. Session cookies should be protected and handled carefully.'],
+  ['🔒','HTTPS','HTTPS protects data in transit between the browser and website. It does not automatically make a dishonest or vulnerable website safe.']
+ ],q:[
+  mc('Authentication answers which question?','Who are you?',['What are you allowed to do?','How fast is the site?','Where is the database stored?'],'Authorization answers what you may do.'),
+  mc('What does HTTPS protect?','Data while it travels between browser and site',['Every file on the server from all threats','A user from every scam','A site from all coding bugs'],'HTTPS protects transport, not every part of a website.'),
+  tf('A site using HTTPS is guaranteed to be trustworthy.',false,'HTTPS is important, but malicious sites can also use it.'),
+  fl('Authorization determines what a user is allowed to ___.','do',['remember','encrypt'],'Authentication identifies; authorization grants permissions.')
+ ]},
+ {id:'6-3',title:'Common Web Risks',icon:'🕸️',cards:[
+  ['🧩','Cross-site scripting (XSS)','XSS happens when a site handles untrusted content unsafely and it runs as script in another user’s browser. Encode output and use safe APIs.'],
+  ['🗃️','SQL injection','SQL injection occurs when untrusted input is treated as part of a database command. Parameterized queries are a key defense.'],
+  ['🔐','Access control','Every sensitive action must check permissions on the server. Hiding a button in the interface is not access control.']
+ ],q:[
+  mc('What is a key defense against XSS?','Context-aware output encoding and safe APIs',['Trusting all user text','Removing the login page','Using a longer URL'],'Handle untrusted content safely before displaying it.'),
+  mc('Why is hiding an admin button not enough?','A request could still be sent directly to the server',['Buttons always contain viruses','It makes passwords shorter','It disables HTTPS'],'The server must enforce authorization for every sensitive action.'),
+  tf('A user changing an ID in a request should never gain access to another person’s data.',true,'The server must check the user’s permission for the requested object.'),
+  fl('Use parameterized queries to reduce SQL ___.','injection',['animation','compression'],'Parameterized queries separate data from instructions.')
+ ]}
+]},
+{id:7,title:'Ethical Hacking & Safe Labs',color:'#CC3F3F',icon:'🎯',lessons:[
+ {id:'7-1',title:'Permission and Scope',icon:'📜',cards:[
+  ['📝','Get written permission','Test only systems you own or have explicit authorization to assess. Good intentions do not replace permission.'],
+  ['🎯','Define scope','Scope states which systems, accounts, techniques, and dates are approved, and what must not be touched.'],
+  ['🛑','Stop when uncertain','If a target is outside scope or an unexpected risk appears, stop and ask the authorized owner before proceeding.']
+ ],q:[
+  mc('When is a security test appropriate?','When you have explicit authorization and follow the scope',['Whenever a site is public','When you are curious','When no one notices'],'Permission and scope are essential.'),
+  tf('A public website is automatically authorized for penetration testing.',false,'Public access is not permission to test it.'),
+  fl('The approved boundaries of a test are its ___.','scope',['score','theme'],'Scope defines what is included and excluded.'),
+  mc('What should you do if you discover the target is out of scope?','Stop and contact the authorized owner',['Continue quietly','Share the data online','Try a different account'],'Do not test beyond the permission you were given.')
+ ]},
+ {id:'7-2',title:'Build a Safe Practice Lab',icon:'🧪',cards:[
+  ['🏠','Use a local lab','Practice on intentionally vulnerable training apps or systems running locally, not on real people’s accounts or public targets.'],
+  ['🧱','Isolate the lab','Use test data, limit network exposure, and keep vulnerable practice systems separate from personal files and important accounts.'],
+  ['💾','Reset safely','Take snapshots or backups before exercises and restore the lab afterward. Never put real passwords or personal data into a training environment.']
+ ],q:[
+  mc('Where should a beginner practice security testing?','An authorized local lab or training environment',['A stranger’s account','A random public server','A school system without permission'],'A safe lab provides permission and limits unintended harm.'),
+  tf('An intentionally vulnerable lab should be exposed to the whole internet by default.',false,'Keep training systems isolated and limit access.'),
+  mc('What kind of data should you use in a practice lab?','Fake test data',['Real passwords','Other people’s private files','Live account tokens'],'Use test data to avoid exposing real information.'),
+  fl('A backup or snapshot helps you restore the lab to a known ___.','state',['password','website'],'Snapshots help reset the environment after practice.')
+ ]},
+ {id:'7-3',title:'Report Findings Responsibly',icon:'📝',cards:[
+  ['📌','Describe the issue','A useful finding states what was observed, the affected asset, the conditions, and the potential impact without exaggeration.'],
+  ['🧾','Keep evidence minimal','Record only the evidence needed to explain the issue. Avoid collecting or exposing personal data, secrets, or unrelated files.'],
+  ['🛠️','Recommend a fix','Give practical remediation steps and, when authorized, retest to confirm the problem is resolved. Share the report only with approved recipients.']
+ ],q:[
+  mc('What makes a security report useful?','Clear evidence, impact, and a practical fix',['Unsupported accusations','Publishing secrets','Only a dramatic title'],'A report should help the owner understand and resolve the issue.'),
+  tf('A responsible report should include unrelated private data to prove a point.',false,'Keep evidence minimal and protect privacy.'),
+  mc('Who should receive a confidential finding?','The authorized owner or approved reporting channel',['Everyone on social media','Random users','A public chat'],'Follow the agreed disclosure process.'),
+  fl('After a fix, an authorized tester can ___.','retest',['leak data','expand scope'],'Retesting checks whether the remediation worked.')
+ ]}
+]});
+
+const UPCOMING=[];
+
+const FLAT=LEVELS.flatMap(L=>L.lessons.map(l=>Object.assign({level:L},l)));
+
+/* ---------- state & storage ---------- */
+const KEY='cyberpath.v1';
+let mem=null;
+const fresh=()=>({xp:0,streak:0,best:0,last:'',done:{},badges:{},flawless:0,theme:'auto'});
+function load(){
+  try{const r=localStorage.getItem(KEY);if(r)return Object.assign(fresh(),JSON.parse(r))}catch(e){}
+  return mem?Object.assign(fresh(),mem):fresh();
+}
+function save(){
+  mem=JSON.parse(JSON.stringify(S));
+  try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+}
+let S=load();
+let view='home', P=null, resetArmed=false, scrollToCur=true;
+
+function applyTheme(){
+  const r=document.documentElement;
+  if(S.theme==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',S.theme);
+}
+applyTheme();
+
+const effStreak=()=>(S.last===today()||S.last===yesterday())?S.streak:0;
+const doneCount=()=>Object.keys(S.done).length;
+
+/* ---------- badges ---------- */
+const BADGES=[
+ {id:'first',n:'First Step',d:'Finish your first lesson',i:'🌱',t:()=>doneCount()>=1},
+ {id:'flawless',n:'Flawless',d:'Finish a lesson with zero mistakes',i:'💎',t:()=>S.flawless>0},
+ {id:'streak3',n:'On Fire',d:'Reach a 3-day streak',i:'🔥',t:()=>S.best>=3},
+ {id:'xp100',n:'Spark',d:'Earn 100 XP',i:'⚡',t:()=>S.xp>=100},
+ {id:'xp300',n:'Voltage',d:'Earn 300 XP',i:'🔋',t:()=>S.xp>=300}
+].concat(LEVELS.map(L=>({id:'lvl'+L.id,n:'Level '+L.id+' Cleared',d:L.title,i:L.icon,t:()=>L.lessons.every(l=>S.done[l.id])})))
+ .concat(UPCOMING.map(L=>({id:'lvl'+L.id,n:'Level '+L.id+' Cleared',d:L.title,i:L.icon,t:()=>false})));
+
+function awardBadges(){
+  const got=[];
+  BADGES.forEach(b=>{if(!S.badges[b.id]&&b.t()){S.badges[b.id]=today();got.push(b)}});
+  return got;
+}
+
+/* ---------- lesson engine ---------- */
+function prepare(q,id){
+  const p={id,t:q.t,q:q.q,e:q.e};
+  if(q.t==='mcq'||q.t==='fill'){
+    p.opts=shuffle([{x:q.c,ok:true}].concat(q.w.map(x=>({x,ok:false}))));
+  }else if(q.t==='tf'){
+    p.opts=[{x:'True',ok:q.b},{x:'False',ok:!q.b}];
+  }else{
+    p.valid=q.valid;
+    p.pool=shuffle(q.valid[0].concat(q.extra));
   }
-  /* quiz */
+  return p;
+}
+function isUnlocked(i){return i===0||!!S.done[FLAT[i-1].id]}
+
+function startLesson(id){
+  const L=FLAT.find(l=>l.id===id);
+  P={L,phase:'learn',ci:0,queue:L.q.map((q,i)=>prepare(q,i)),i:0,cleared:new Set(),missed:new Set(),firstTry:0,
+     sel:null,picked:[],checked:false,ok:false,result:null};
+  render();
+}
+function canCheck(){
   const q=P.queue[P.i];
-  const pct=Math.round(P.cleared.size/L.q.length*100);
-  let body='';
-  const label={mcq:'Choose the answer',fill:'Fill in the blank',tf:'True or false',order:'Build the command'}[q.t];
+  return q.t==='order'?P.picked.length>0:P.sel!==null;
+}
+function check(){
+  const q=P.queue[P.i];
+  if(!canCheck()||P.checked)return;
   if(q.t==='order'){
-    const picked=P.picked.map((pi,k)=>`<button class="tok" data-a="unpick" data-k="${k}" ${P.checked?'disabled':''}>${esc(q.pool[pi])}</button>`).join('');
-    const pool=q.pool.map((w,i)=>`<button class="tok ${P.picked.includes(i)?'used':''}" data-a="pick" data-i="${i}" ${(P.checked||P.picked.includes(i))?'disabled':''}>${esc(w)}</button>`).join('');
-    body=`<span class="tag">${label}</span><div class="qtext">${fmt(q.q)}</div><div class="ans">${picked}</div><div class="pool">${pool}</div>`;
+    const seq=P.picked.map(i=>q.pool[i]).join(' ');
+    P.ok=q.valid.some(v=>v.join(' ')===seq);
   }else{
-    let text;
-    if(q.t==='fill'){
-      const chosen=P.sel!==null?esc(q.opts[P.sel].x):'&nbsp;';
-      text=fmt(q.q).replace('___',`<span class="blank">${chosen}</span>`);
-    }else text=fmt(q.q);
-    const opts=q.opts.map((o,i)=>{
-      let cls='';
-      if(P.checked){cls=o.ok?'right':(P.sel===i?'wrong':'')}
-      else if(P.sel===i)cls='sel';
-      return `<button class="opt ${cls}" data-a="sel" data-i="${i}" ${P.checked?'disabled':''}>${esc(o.x)}</button>`;
-    }).join('');
-    body=`<span class="tag">${label}</span><div class="qtext">${text}</div><div class="opts">${opts}</div>`;
+    P.ok=q.opts[P.sel].ok;
   }
-  let dock;
-  if(P.checked){
-    const right=q.t==='order'?q.valid[0].join(' '):q.opts.find(o=>o.ok).x;
-    dock=`<div class="dock ${P.ok?'good':'bad'}"><div><div class="fb"><b>${P.ok?'Correct!':'Not quite'}</b>
-      <p>${P.ok?'':'Answer: <code>'+esc(right)+'</code>. '}${fmt(q.e)}</p></div>
-      <button class="btn" data-a="next">Continue</button></div></div>`;
+  P.checked=true;
+  if(P.ok){
+    if(!P.cleared.has(q.id)){
+      P.cleared.add(q.id);
+      if(!P.missed.has(q.id))P.firstTry++;
+    }
   }else{
-    dock=`<div class="dock"><div><button class="btn" data-a="check" ${canCheck()?'':'disabled'}>Check</button></div></div>`;
+    P.missed.add(q.id);
+    P.queue.push(prepare(P.L.q[q.id],q.id));
   }
-  return `<div class="lesson"><div class="lhead"><button class="x" data-a="close" aria-label="Quit lesson">✕</button>
-    <div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div></div>
-    <div class="lbody">${body}</div>${dock}</div>`;
+  render();
+}
+function next(){
+  P.i++;P.sel=null;P.picked=[];P.checked=false;P.ok=false;
+  if(P.i>=P.queue.length)finishLesson();else render();
+}
+function finishLesson(){
+  const total=P.L.q.length;
+  const mistakes=P.missed.size;
+  const perfect=mistakes===0;
+  const xp=P.firstTry*10+(perfect?5:0);
+  const stars=mistakes===0?3:mistakes<=2?2:1;
+  const firstTime=!S.done[P.L.id];
+  const prev=S.done[P.L.id];
+  S.done[P.L.id]={stars:Math.max(stars,prev?prev.stars:0)};
+  S.xp+=xp;
+  if(perfect)S.flawless++;
+  const t=today();
+  if(S.last!==t){
+    S.streak=(S.last===yesterday())?S.streak+1:1;
+    S.last=t;
+    S.best=Math.max(S.best,S.streak);
+  }
+  const got=awardBadges();
+  save();
+  P.phase='done';
+  P.result={xp,stars,acc:Math.round(P.firstTry/total*100),got,firstTime};
+  render();
+}
+function closeLesson(){P=null;scrollToCur=true;render()}
+
+/* ---------- views ---------- */
+function topBar(){
+  return `<header class="top"><div class="brand"><i>&gt;_</i>Djalal_Cyber</div>
+  <div class="stats"><span class="chip" aria-label="Streak">🔥 ${effStreak()}</span><span class="chip" aria-label="XP">⚡ ${S.xp}</span></div></header>`;
+}
+function navBar(){
+  const b=(k,i,l)=>`<button class="${view===k?'on':''}" data-a="tab" data-v="${k}"><span>${i}</span>${l}</button>`;
+  return `<nav class="nav"><div>${b('home','🗺️','Learn')}${b('badges','🏅','Badges')}${b('profile','👤','Profile')}</div></nav>`;
 }
 
-function render(){
-  const app=document.getElementById('app');
-  if(P){app.innerHTML=viewLesson();return}
-  app.innerHTML=view==='home'?viewHome():view==='badges'?viewBadges():viewProfile();
-  if(view==='home'&&scrollToCur){
-    scrollToCur=false;
-    setTimeout(()=>{const n=document.getElementById('curnode');if(n)n.scrollIntoView({block:'center'})},30);
-  }
-}
-
-/* ---------- events ---------- */
-let toastT;
-function toast(m){
-  const t=document.getElementById('toast');
-  t.textContent=m;t.classList.add('show');
-  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),1800);
-}
-const A={
-  tab:d=>{view=d.v;resetArmed=false;if(view==='home')scrollToCur=true;window.scrollTo(0,0);render()},
-  open:d=>startLesson(d.id),
-  locked:()=>toast('Finish the previous lesson to unlock this one.'),
-  close:()=>closeLesson(),
-  learnnext:()=>{if(P.ci<P.L.cards.length-1)P.ci++;else P.phase='quiz';render()},
-  sel:d=>{if(!P.checked){P.sel=+d.i;render()}},
-  pick:d=>{if(!P.checked){P.picked.push(+d.i);render()}},
-  unpick:d=>{if(!P.checked){P.picked.splice(+d.k,1);render()}},
-  check:()=>check(),
-  next:()=>next(),
-  theme:()=>{S.theme=S.theme==='auto'?'light':S.theme==='light'?'dark':'auto';applyTheme();save();render()},
-  reset:()=>{
-    if(!resetArmed){resetArmed=true;render();return}
-    const th=S.theme;S=fresh();S.theme=th;save();resetArmed=false;toast('Progress erased.');render();
-  }
-};
-document.addEventListener('click',e=>{
-  const b=e.target.closest('[data-a]');
-  if(!b||b.disabled)return;
-  const f=A[b.dataset.a];
-  if(f)f(b.dataset);
-});
-document.addEventListener('keydown',e=>{
-  if(e.key!=='Enter'||!P||P.phase!=='quiz')return;
-  if(e.target&&e.target.closest&&e.target.closest('button'))return;
-  if(P.checked)next();else check();
-});
-
-/* ---------- PWA: offline support ---------- */
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    try{navigator.serviceWorker.register('./sw.js').catch(()=>{})}catch(e){}
+const OFFS=[0,44,64,44,0,-44,-64,-44];
+function viewHome(){
+  const curIdx=FLAT.findIndex(l=>!S.done[l.id]);
+  let g=0,h='';
+  LEVELS.forEach(L=>{
+    const n=L.lessons.filter(l=>S.done[l.id]).length;
+    h+=`<section class="level" style="--c:${L.color}"><div class="banner"><div><div class="lv">Level ${L.id}</div><h2>${esc(L.title)}</h2></div><div class="count">${n}/${L.lessons.length}</div></div><div class="path">`;
+    L.lessons.forEach(l=>{
+      const idx=g;
+      const st=S.done[l.id]?'done':(idx===curIdx?'cur':(isUnlocked(idx)?'cur':'lock'));
+      const isCur=idx===curIdx;
+      const inner=st==='done'?'✓':st==='cur'?l.icon:'🔒';
+      h+=`<div class="nodewrap" style="transform:translateX(${OFFS[g%8]}px)">
+        ${isCur?'<div class="tip">Start</div>':''}
+        <button class="node ${st}" ${isCur?'id="curnode"':''} data-a="${st==='lock'?'locked':'open'}" data-id="${l.id}" aria-label="${esc(l.title)}${st==='lock'?', locked':''}">${inner}</button>
+        <div class="nlabel">${esc(l.title)}</div></div>`;
+      g++;
+    });
+    h+=`</div></section>`;
   });
+  UPCOMING.forEach(L=>{
+    h+=`<section class="level"><div class="banner soon"><div><div class="lv">Level ${L.id}</div><h2>${esc(L.title)}</h2></div><div class="count">${L.icon} Soon</div></div></section>`;
+  });
+  return topBar()+`<main>${h}<p class="soonnote">More levels are on the way.</p></main>`+navBar();
 }
 
-render();
-})();
-</script>
-</body>
-</html>
+function viewBadges(){
+  const earned=BADGES.filter(b=>S.badges[b.id]).length;
+  const h=BADGES.map(b=>{
+    const on=!!S.badges[b.id];
+    return `<div class="badge ${on?'':'off'}"><span class="bi">${b.i}</span><b>${esc(b.n)}</b><span>${esc(b.d)}</span></div>`;
+  }).join('');
+  return topBar()+`<main><h1 class="pagehead">Badges <span style="color:var(--muted);font-size:18px">${earned}/${BADGES.length}</span></h1><div class="badges">${h}</div></main>`+navBar();
+}
+
+function viewProfile(){
+  const themeLabel={auto:'Auto',light:'Light',dark:'Dark'}[S.theme];
+  return topBar()+`<main><h1 class="pagehead">Your progress</h1>
+  <div class="grid">
+   <div class="stat"><b>⚡ ${S.xp}</b><span>Total XP</span></div>
+   <div class="stat"><b>🔥 ${effStreak()}</b><span>Day streak</span></div>
+   <div class="stat"><b>${doneCount()}/${FLAT.length}</b><span>Lessons done</span></div>
+   <div class="stat"><b>🏅 ${Object.keys(S.badges).length}</b><span>Badges earned</span></div>
+  </div>
+  <div class="card" style="margin-top:14px">
+   <b>Appearance</b>
+   <div class="row"><button class="btn ghost" data-a="theme">Theme: ${themeLabel}</button></div>
+  </div>
+  <div class="card" style="margin-top:14px">
+   <b>Reset progress</b>
+   <p style="color:var(--muted);font-size:14px;margin-top:2px">Erases XP, streak, badges and finished lessons on this device.</p>
+   <div class="row"><button class="btn danger" data-a="reset">${resetArmed?'Tap again to erase everything':'Reset progress'}</button></div>
+  </div>
+  <p class="soonnote">Progress is saved on this device in this browser.</p></main>`+navBar();
+}
+
+function viewLesson(){
+  const L=P.L;
+  if(P.phase==='learn'){
+    const c=L.cards[P.ci];
+    const last=P.ci===L.cards.length-1;
+    return `<div class="lesson">
+     <div class="lhead"><button class="x" data-a="close" aria-label="Close lesson">✕</button>
+       <div class="bar"><i style="width:0%"></i></div></div>
+     <div class="lbody"><div class="learn">
+       <span class="tag">${esc(L.title)}</span>
+       <div class="em">${c[0]}</div><h2>${esc(c[1])}</h2><p>${fmt(c[2])}</p>
+       <div class="dots">${L.cards.map((_,i)=>`<i class="${i===P.ci?'on':''}"></i>`).join('')}</div>
+     </div></div>
+     <div c
